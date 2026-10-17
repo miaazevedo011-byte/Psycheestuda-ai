@@ -2,7 +2,7 @@
 let textoExtraido = '';
 
 // Chave da API do Gemini — COLOQUE SUA CHAVE AQUI
-const GEMINI_API_KEY = 'AQ.Ab8RN6LNUvp3wQ_vLk-DaA8DgZUOsW1qmmSb0GEtANIZ59FSfA';
+const GEMINI_API_KEY = 'AQ.Ab8RN6LiP8Ys2oG2ZoVI6PAshQni63mtsg7BTE9MuEN5s24u1A';
 
 // Navegação entre seções
 function showSection(section) {
@@ -136,7 +136,8 @@ async function gerarResumoIA() {
         const textoParaResumir = textoExtraido.substring(0, 15000); // Limite de caracteres
         
         const resposta = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+            ``https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
+}`,
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
