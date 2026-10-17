@@ -24,10 +24,9 @@
                 <span class="logo-icon">Ψ</span>
                 <span>PsicoEstuda AI</span>
             </div>
-            <nav class="menu">
-                <a href="#" class="menu-item active" onclick="voltarInicio(); return false;">🏠 Início</a>
-                <a href="#" class="menu-item" onclick="mostrarMeuEspaco(); return false;">👤 Meu espaço</a>
-                <a href="#" class="menu-item" onclick="showSection('materiais')">📄 Materiais</a>
+            <a href="#" class="menu-item active" onclick="voltarInicio(); return false;">🏠 Início</a>
+<a href="#" class="menu-item" onclick="mostrarMeuEspaco(); return false;">👤 Meu espaço</a>
+<a href="#" class="menu-item" onclick="showSection('materiais'); return false;">📁 Materiais</a>
                 <a href="#" class="menu-item">✨ Estudar com IA</a>
                 <a href="#" class="menu-item" onclick="mostrarPagina('pagina-enciclopedia'); return false;">📖 Enciclopédia</a>
 <a href="#" class="menu-item" onclick="mostrarPagina('pagina-autores'); return false;">👤 Autores e teorias</a>
@@ -43,10 +42,25 @@
         <!-- Conteúdo Principal -->
         <main class="main-content" id="main-content">
             <!-- Página Início -->
-            <div id="pagina-meuespaco" style="display: none;">
+<!-- ✅ Página Inicial --->
+<div id="pagina-inicio">
+  <h1>Seu espaço de estudos em Psicologia</h1>
+  <p class="subtitulo">Organize materiais, revise conceitos e avance na graduação no seu ritmo.</p>
+  
+  <!-- ... cards ... -->
+</div>
+
+<!-- ✅ ===> COLE AQUI a div do Meu Espaço e Materiais! <=== -->
+<div id="pagina-meuespaco" style="display: none;">
   <h1>👤 Meu espaço</h1>
   <p class="subtitulo">Sua rotina e visão geral de estudos</p>
 </div>
+
+<div id="pagina-materiais" style="display: none;">
+  <h1>📁 Materiais</h1>
+  <p class="subtitulo">Arquivos, resumos e materiais de estudo</p>
+</div>
+
                 <h1>Seu espaço de estudos em Psicologia</h1>
                 <p class="subtitulo">Organize materiais, revise conceitos e avance na graduação no seu ritmo.</p>
 
