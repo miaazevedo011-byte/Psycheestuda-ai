@@ -99,7 +99,40 @@
          </div>
        </div>
        <!-- 🟡 Outras Páginas -->
-       <div id="pagina-enciclopedia" style="display: none;">
+<div id="pagina-enciclopedia" style="display: none;">
+  <h1>📖 Enciclopédia</h1>
+  <p class="subtitulo">Conceitos e definições da Psicologia</p>
+
+  <!-- Barra de Busca -->
+  <div style="margin: 20px 0;">
+    <input type="text" id="busca-enciclopedia" placeholder="🔍 Buscar termo..." 
+           style="padding: 10px; width: 100%; max-width: 400px; border-radius: 8px; border: 1px solid #ccc;">
+    <button onclick="buscarEnciclopedia()" style="margin-left: 8px;">Buscar</button>
+  </div>
+
+  <!-- Lista de Verbetes -->
+  <div id="lista-enciclopedia" style="margin-top: 20px;">
+    <h3>📋 Verbetes</h3>
+    <ul style="list-style: none; padding: 0; margin-top: 10px;">
+      <li style="padding: 8px 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+          onclick="verTermo('psicologia-geral')">📚 Psicologia Geral</li>
+      <li style="padding: 8px 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+          onclick="verTermo('desenvolvimento')">👶 Psicologia do Desenvolvimento</li>
+      <li style="padding: 8px 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+          onclick="verTermo('social')">👥 Psicologia Social</li>
+      <li style="padding: 8px 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+          onclick="verTermo('clínica')">🏥 Psicologia Clínica</li>
+    </ul>
+  </div>
+
+  <!-- Conteúdo do Termo Selecionado -->
+  <div id="conteudo-termo" style="display: none; margin-top: 20px; padding: 15px; background: #f9fafc; border-radius: 8px;">
+    <button onclick="fecharTermo()" style="background: none; color: #4A6FA5; border: none; padding: 0; cursor: pointer;">← Voltar</button>
+    <h3 id="titulo-termo"></h3>
+    <p id="texto-termo"></p>
+  </div>
+</div>
+
          <h1>📖 Enciclopédia</h1>
          <p class="subtitulo">Conceitos e definições da Psicologia</p>
        </div>
@@ -112,6 +145,51 @@
          <p class="subtitulo">História e evolução da Psicologia</p>
        </div>
        <div id="pagina-biblioteca" style="display: none;">
+  <h1>📚 Biblioteca</h1>
+  <p class="subtitulo">Seus livros, arquivos e leituras</p>
+
+  <!-- Abas -->
+  <div style="margin: 20px 0; display: flex; gap: 10px;">
+    <button id="aba-meus-arquivos" onclick="mostrarAba('meus-arquivos')" style="background: #4A6FA5;">📁 Meus Arquivos</button>
+    <button id="aba-livros" onclick="mostrarAba('livros')" style="background: #ccc;">📖 Livros</button>
+    <button id="aba-favoritos" onclick="mostrarAba('favoritos')" style="background: #ccc;">⭐ Favoritos</button>
+  </div>
+
+  <!-- Conteúdo: Meus Arquivos -->
+  <div id="conteudo-meus-arquivos">
+    <h3>📁 Arquivos enviados</h3>
+    <div id="lista-arquivos" style="margin-top: 10px;">
+      <!-- Os arquivos que você enviar vão aparecer aqui! -->
+      <p style="color: #666;">Nenhum arquivo ainda. Envie na página "Materiais".</p>
+    </div>
+  </div>
+
+  <!-- Conteúdo: Livros -->
+  <div id="conteudo-livros" style="display: none;">
+    <h3>📖 Livros recomendados</h3>
+    <ul style="list-style: none; padding: 0; margin-top: 10px;">
+      <li style="padding: 10px; background: #f0f4f8; border-radius: 6px; margin-bottom: 8px;">
+        <strong>📗 Psicologias: Uma introdução ao estudo de Psicologia</strong><br>
+        Ana Mercês Bahia Bock, Maria de Lourdes Trassi Teixeira, Odair Furtado
+      </li>
+      <li style="padding: 10px; background: #f0f4f8; border-radius: 6px; margin-bottom: 8px;">
+        <strong>📘 História da Psicologia</strong><br>
+        Ana Mercês Bahia Bock
+      </li>
+      <li style="padding: 10px; background: #f0f4f8; border-radius: 6px; margin-bottom: 8px;">
+        <strong>📙 Teorias da Personalidade</strong><br>
+        Lawrence A. Pervin
+      </li>
+    </ul>
+  </div>
+
+  <!-- Conteúdo: Favoritos -->
+  <div id="conteudo-favoritos" style="display: none;">
+    <h3>⭐ Meus Favoritos</h3>
+    <p style="color: #666; margin-top: 10px;">Marque itens como favoritos para acessá-los rapidamente!</p>
+  </div>
+</div>
+
          <h1>📚 Biblioteca</h1>
          <p class="subtitulo">Leituras recomendadas</p>
        </div>
