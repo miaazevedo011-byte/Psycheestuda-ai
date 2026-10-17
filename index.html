@@ -100,3 +100,225 @@
           <button id="aba-livros" onclick="mostrarAba('livros')" style="background: #ccc;">📖 Livros</button>
           <button id="aba-favoritos" onclick="mostrarAba('favoritos')" style="background: #ccc;">⭐ Favoritos</button>
         </div>
+      <!-- 📖 ENCICLOPÉDIA -->
+      <div id="pagina-enciclopedia" style="display: none;">
+        <h1>📖 Enciclopédia</h1>
+        <p class="subtitulo">Conceitos e definições da Psicologia</p>
+
+        <div style="margin: 20px 0;">
+          <input type="text" id="busca-enciclopedia" placeholder="🔍 Buscar termo..." 
+                 style="padding: 10px; width: 100%; max-width: 400px; border-radius: 8px; border: 1px solid #ccc;">
+          <button onclick="buscarEnciclopedia()">Buscar</button>
+        </div>
+
+        <div id="lista-enciclopedia" style="margin-top: 20px;">
+          <h3>📋 Verbetes</h3>
+          <ul style="list-style: none; padding: 0; margin-top: 10px;">
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('enc-psicologia-geral')">📚 Psicologia Geral</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('enc-desenvolvimento')">👶 Psicologia do Desenvolvimento</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('enc-social')">👥 Psicologia Social</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('enc-clinica')">🏥 Psicologia Clínica</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('enc-aprendizagem')">🧠 Psicologia da Aprendizagem</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('enc-personalidade')">💭 Psicologia da Personalidade</li>
+          </ul>
+        </div>
+
+        <div id="conteudo-enciclopedia" style="display: none; margin-top: 20px; padding: 18px; background: #f9fafc; border-radius: 8px;">
+          <button onclick="fecharLista('enciclopedia')" style="background: none; color: #4A6FA5; border: none; padding: 0; cursor: pointer; font-size: 15px;">← Voltar</button>
+          <h3 id="titulo-enciclopedia" style="margin-top: 10px;"></h3>
+          <p id="texto-enciclopedia" style="margin-top: 10px; line-height: 1.6;"></p>
+        </div>
+      </div>
+
+      <!-- 👤 AUTORES E TEORIAS -->
+      <div id="pagina-autores" style="display: none;">
+        <h1>👤 Autores e Teorias</h1>
+        <p class="subtitulo">Principais pensadores e correntes da Psicologia</p>
+
+        <div id="lista-autores" style="margin-top: 20px;">
+          <h3>📋 Lista</h3>
+          <ul style="list-style: none; padding: 0; margin-top: 10px;">
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('aut-freud')">🧠 Sigmund Freud — Psicanálise</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('aut-piaget')">🔬 Jean Piaget — Desenvolvimento Cognitivo</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('aut-skinner')">📉 B.F. Skinner — Behaviorismo</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('aut-rogers')">💚 Carl Rogers — Humanismo</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('aut-vygotsky')">📚 Lev Vygotsky — Sociocultural</li>
+          </ul>
+        </div>
+
+        <div id="conteudo-autores" style="display: none; margin-top: 20px; padding: 18px; background: #f9fafc; border-radius: 8px;">
+          <button onclick="fecharLista('autores')" style="background: none; color: #4A6FA5; border: none; padding: 0; cursor: pointer; font-size: 15px;">← Voltar</button>
+          <h3 id="titulo-autores" style="margin-top: 10px;"></h3>
+          <p id="texto-autores" style="margin-top: 10px; line-height: 1.6;"></p>
+        </div>
+      </div>
+
+      <!-- ⏳ LINHA DO TEMPO -->
+      <div id="pagina-linha-tempo" style="display: none;">
+        <h1>⏳ Linha do Tempo</h1>
+        <p class="subtitulo">História e evolução da Psicologia</p>
+
+        <div id="lista-linhatempo" style="margin-top: 20px;">
+          <h3>📋 Cronologia</h3>
+          <ul style="list-style: none; padding: 0; margin-top: 10px;">
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('lt-1879')">🏛️ 1879 — Fundação do primeiro laboratório</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('lt-1900')">📖 1900 — Psicanálise</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('lt-1913')">📊 1913 — Behaviorismo</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('lt-1950')">🌱 1950 — Psicologia Humanista</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('lt-1960')">🧠 1960 — Psicologia Cognitiva</li>
+          </ul>
+        </div>
+
+        <div id="conteudo-linhatempo" style="display: none; margin-top: 20px; padding: 18px; background: #f9fafc; border-radius: 8px;">
+          <button onclick="fecharLista('linhatempo')" style="background: none; color: #4A6FA5; border: none; padding: 0; cursor: pointer; font-size: 15px;">← Voltar</button>
+          <h3 id="titulo-linhatempo" style="margin-top: 10px;"></h3>
+          <p id="texto-linhatempo" style="margin-top: 10px; line-height: 1.6;"></p>
+        </div>
+      </div>
+
+      <!-- 📚 BIBLIOTECA -->
+      <div id="pagina-biblioteca" style="display: none;">
+        <h1>📚 Biblioteca</h1>
+        <p class="subtitulo">Seus livros, arquivos e leituras recomendadas</p>
+
+        <div style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
+          <button id="aba-meus-arquivos" onclick="mostrarAba('meus-arquivos')" style="background: #4A6FA5;">📁 Meus Arquivos</button>
+          <button id="aba-livros" onclick="mostrarAba('livros')" style="background: #ccc;">📖 Livros</button>
+          <button id="aba-favoritos" onclick="mostrarAba('favoritos')" style="background: #ccc;">⭐ Favoritos</button>
+        </div>
+
+        <div id="conteudo-meus-arquivos">
+          <h3>📁 Arquivos enviados</h3>
+          <p style="color: #666; margin-top: 10px;">Nenhum arquivo ainda. Envie na página "Materiais".</p>
+        </div>
+
+        <div id="conteudo-livros" style="display: none;">
+          <h3>📖 Livros recomendados</h3>
+          <ul style="list-style: none; padding: 0; margin-top: 10px;">
+            <li style="padding: 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 8px;">
+              <strong>📗 Psicologias: Uma introdução ao estudo de Psicologia</strong><br>
+              Ana Mercês Bahia Bock, Maria de Lourdes Trassi Teixeira, Odair Furtado
+            </li>
+            <li style="padding: 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 8px;">
+              <strong>📘 História da Psicologia</strong><br>
+              Ana Mercês Bahia Bock
+            </li>
+            <li style="padding: 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 8px;">
+              <strong>📙 Teorias da Personalidade</strong><br>
+              Lawrence A. Pervin
+            </li>
+            <li style="padding: 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 8px;">
+              <strong>📕 Psicologia do Desenvolvimento</strong><br>
+              Diane E. Papalia, Ruth Duskin Feldman
+            </li>
+          </ul>
+        </div>
+
+        <div id="conteudo-favoritos" style="display: none;">
+          <h3>⭐ Meus Favoritos</h3>
+          <p style="color: #666; margin-top: 10px;">Marque itens como favoritos para acessá-los rapidamente!</p>
+        </div>
+      </div>
+
+      <!-- 📄 CONTEÚDOS -->
+      <div id="pagina-conteudos" style="display: none;">
+        <h1>📄 Conteúdos</h1>
+        <p class="subtitulo">Resumos, apostilas e materiais de estudo</p>
+
+        <div id="lista-conteudos" style="margin-top: 20px;">
+          <h3>📋 Categorias</h3>
+          <ul style="list-style: none; padding: 0; margin-top: 10px;">
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('con-introducao')">📚 Introdução à Psicologia</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('con-metodologia')">🔬 Metodologia Científica</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('con-bases')">🧬 Bases Biológicas do Comportamento</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('con-aprendizagem')">📝 Processos de Aprendizagem</li>
+          </ul>
+        </div>
+
+        <div id="conteudo-conteudos" style="display: none; margin-top: 20px; padding: 18px; background: #f9fafc; border-radius: 8px;">
+          <button onclick="fecharLista('conteudos')" style="background: none; color: #4A6FA5; border: none; padding: 0; cursor: pointer; font-size: 15px;">← Voltar</button>
+          <h3 id="titulo-conteudos" style="margin-top: 10px;"></h3>
+          <p id="texto-conteudos" style="margin-top: 10px; line-height: 1.6;"></p>
+        </div>
+      </div>
+
+      <!-- 📝 GLOSSÁRIO -->
+      <div id="pagina-glossario" style="display: none;">
+        <h1>📝 Glossário</h1>
+        <p class="subtitulo">Termos e conceitos importantes</p>
+
+        <div id="lista-glossario" style="margin-top: 20px;">
+          <h3>📋 Termos</h3>
+          <ul style="list-style: none; padding: 0; margin-top: 10px; columns: 2;">
+            <li style="padding: 8px 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('glo-consciencia')">Consciência</li>
+            <li style="padding: 8px 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('glo-percepcao')">Percepção</li>
+            <li style="padding: 8px 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('glo-memoria')">Memória</li>
+            <li style="padding: 8px 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('glo-emocao')">Emoção</li>
+            <li style="padding: 8px 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('glo-motivacao')">Motivação</li>
+            <li style="padding: 8px 12px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('glo-inteligencia')">Inteligência</li>
+          </ul>
+        </div>
+
+        <div id="conteudo-glossario" style="display: none; margin-top: 20px; padding: 18px; background: #f9fafc; border-radius: 8px;">
+          <button onclick="fecharLista('glossario')" style="background: none; color: #4A6FA5; border: none; padding: 0; cursor: pointer; font-size: 15px;">← Voltar</button>
+          <h3 id="titulo-glossario" style="margin-top: 10px;"></h3>
+          <p id="texto-glossario" style="margin-top: 10px; line-height: 1.6;"></p>
+        </div>
+      </div>
+
+      <!-- 📂 DISCIPLINAS -->
+      <div id="pagina-disciplinas" style="display: none;">
+        <h1>📂 Disciplinas</h1>
+        <p class="subtitulo">Organização por matérias do curso</p>
+
+        <div id="lista-disciplinas" style="margin-top: 20px;">
+          <h3>📋 Semestres</h3>
+          <ul style="list-style: none; padding: 0; margin-top: 10px;">
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('disc-psigeral')">📖 Psicologia Geral</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('disc-biologica')">🧬 Bases Biológicas</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('disc-metodologia')">📊 Metodologia</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('disc-desenvolvimento')">👶 Psicologia do Desenvolvimento</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('disc-social')">👥 Psicologia Social</li>
+            <li style="padding: 10px 14px; background: #f0f4f8; border-radius: 6px; margin-bottom: 6px; cursor: pointer;"
+                onclick="verItem('disc-clinica')">🏥 Psicologia Clínica</li>
+          </ul>
+        </div>
+
+        <div id="conteudo-disciplinas" style="display: none; margin-top: 20px; padding: 18px; background: #f9fafc; border-radius: 8px;">
+          <button onclick="fecharLista('disciplinas')" style="background: none; color: #4A6FA5; border: none; padding: 0; cursor: pointer; font-size: 15px;">← Voltar</button>
+          <h3 id="titulo-disciplinas" style="margin-top: 10px;"></h3>
+          <p id="texto-disciplinas" style="margin-top: 10px; line-height: 1.6;"></p>
+        </div>
+      </div>
+      
