@@ -185,3 +185,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const discCard = document.querySelector('.card-verde-claro2');
   if (discCard) discCard.onclick = () => mostrarPagina('pagina-disciplinas');
 });
+function voltarInicio() {
+  // Esconde todas as páginas
+  document.querySelectorAll('main > div').forEach(p => p.style.display = 'none');
+  // Mostra a página inicial
+  document.getElementById('pagina-inicio').style.display = 'block';
+}
