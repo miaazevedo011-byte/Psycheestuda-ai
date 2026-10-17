@@ -185,34 +185,3 @@ document.addEventListener('DOMContentLoaded', function() {
   const discCard = document.querySelector('.card-verde-claro2');
   if (discCard) discCard.onclick = () => mostrarPagina('pagina-disciplinas');
 });
-// 📱 Navegação pela barra lateral esquerda
-document.addEventListener('DOMContentLoaded', function() {
-  // Enciclopédia
-  const menuEnc = document.querySelector('a[href*="enciclopedia"], li:has-text("Enciclopédia")');
-  if (!menuEnc) {
-    const todosItens = document.querySelectorAll('.sidebar li, .menu-item');
-    todosItens.forEach(item => {
-      if (item.textContent.includes('Enciclopédia')) {
-        item.onclick = () => mostrarPagina('pagina-enciclopedia');
-      }
-      if (item.textContent.includes('Autores e teorias')) {
-        item.onclick = () => mostrarPagina('pagina-autores');
-      }
-      if (item.textContent.includes('Linha do tempo')) {
-        item.onclick = () => mostrarPagina('pagina-linhatempo');
-      }
-      if (item.textContent.includes('Biblioteca')) {
-        item.onclick = () => mostrarPagina('pagina-biblioteca');
-      }
-      if (item.textContent.includes('Conteúdos')) {
-        item.onclick = () => mostrarPagina('pagina-conteudos');
-      }
-      if (item.textContent.includes('Glossário')) {
-        item.onclick = () => mostrarPagina('pagina-glossario');
-      }
-      if (item.textContent.includes('Disciplinas')) {
-        item.onclick = () => mostrarPagina('pagina-disciplinas');
-      }
-    });
-  }
-});
