@@ -239,3 +239,33 @@ h2 {
     max-height: 500px;
     overflow-y: auto;
 }
+/* Estilo da área de envio de arquivos */
+#arquivo-input {
+  padding: 10px;
+  margin: 15px 0;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+}
+
+button {
+  padding: 10px 20px;
+  background: #4A6FA5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  margin: 8px 0;
+}
+
+button:hover {
+  background: #3A5F95;
+}
+
+#arquivo-info, #resultado-resumo {
+  padding: 15px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  margin-top: 20px;
+}
