@@ -101,7 +101,8 @@ function buscarEnciclopedia() {
 }
 
 // Ler arquivo e gerar resumo
-function lerArquivo() {
+// Ler arquivo e gerar resumo — suporta .txt, .pdf e .docx
+async function lerArquivo() {
   const input = document.getElementById('arquivo-input');
   const resultado = document.getElementById('resultado-resumo');
   
@@ -112,26 +113,96 @@ function lerArquivo() {
   }
   
   const arquivo = input.files[0];
-  const leitor = new FileReader();
+  let texto = '';
   
-  leitor.onload = function(e) {
-    const texto = e.target.result;
+  resultado.style.display = 'block';
+  resultado.innerHTML = '⏳ Lendo arquivo, aguarde...';
+  
+  try {
+    if (arquivo.name.endsWith('.txt')) {
+      texto = await lerArquivoTexto(arquivo);
+    }
+    else if (arquivo.name.endsWith('.pdf')) {
+      texto = await lerArquivoPDF(arquivo);
+    }
+    else if (arquivo.name.endsWith('.docx')) {
+      texto = await lerArquivoDOCX(arquivo);
+    }
+    else {
+      resultado.innerHTML = '❌ Formato não suportado. Use: .txt, .pdf ou .docx';
+      return;
+    }
     
-    // Resumo simples — contém os primeiros caracteres
-    const resumo = texto.length > 500 ? texto.substring(0, 500) + '...' : texto;
+    const resumo = gerarResumo(texto);
     
-    resultado.style.display = 'block';
-    resultado.innerHTML = '✅ <strong>Resumo de: ' + arquivo.name + '</strong><br><br>' + resumo;
-  };
-  
-  leitor.onerror = function() {
-    resultado.style.display = 'block';
-    resultado.innerHTML = '❌ Erro ao ler o arquivo. Tente com um arquivo de texto (.txt).';
-  };
-  
-  // Só funciona com arquivos de texto simples
-  if (arquivo.type === 'text/plain' || arquivo.name.endsWith('.txt')) {
+    resultado.innerHTML = `
+      ✅ <strong>Resumo de: ${arquivo.name}</strong><br><br>
+      📄 ${texto.length.toLocaleString('pt-BR')} caracteres lidos<br>
+      ✂️ Resumo com ${resumo.length.toLocaleString('pt-BR')} caracteres<br><br>
+      <hr><br>
+      ${resumo}
+    `;
+    
+  } catch (erro) {
+    resultado.innerHTML = '❌ Erro ao ler o arquivo: ' + erro.message;
+  }
+}
+
+// Ler arquivo .txt
+function lerArquivoTexto(arquivo) {
+  return new Promise((resolve, reject) => {
+    const leitor = new FileReader();
+    leitor.onload = e => resolve(e.target.result);
+    leitor.onerror = reject;
     leitor.readAsText(arquivo);
+  });
+}
+
+// Ler arquivo .pdf
+async function lerArquivoPDF(arquivo) {
+  const arrayBuffer = await lerArquivoBinario(arquivo);
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  
+  let textoCompleto = '';
+  const totalPaginas = pdf.numPages;
+  
+  for (let numPagina = 1; numPagina <= totalPaginas; numPagina++) {
+    const pagina = await pdf.getPage(numPagina);
+    const conteudo = await pagina.getTextContent();
+    const textoPagina = conteudo.items.map(item => item.str).join(' ');
+    textoCompleto += textoPagina + '\n';
+  }
+  
+  return textoCompleto;
+}
+
+// Ler arquivo .docx
+async function lerArquivoDOCX(arquivo) {
+  const arrayBuffer = await lerArquivoBinario(arquivo);
+  const resultado = await mammoth.extractRawText({ arrayBuffer });
+  return resultado.value;
+}
+// Auxiliar: ler arquivo como binário
+function lerArquivoBinario(arquivo) {
+  return new Promise((resolve, reject) => {
+    const leitor = new FileReader();
+    leitor.onload = e => resolve(e.target.result);
+    leitor.onerror = reject;
+    leitor.readAsArrayBuffer(arquivo);
+  });
+}
+
+// Gerar um resumo simples
+function gerarResumo(texto) {
+  texto = texto.replace(/\s+/g, ' ').trim();
+  
+  if (texto.length <= 800) return texto;
+  
+  const frases = texto.split(/[.!?]/).filter(f => f.trim().length > 20);
+  const resumoFrases = frases.slice(0, 8).join('. ') + '.';
+  
+  return resumoFrases + '<br><br>📌 <em>Resumo gerado automaticamente com base no início do conteúdo.</em>';
+}
   } else {
     resultado.style.display = 'block';
     resultado.innerHTML = 'ℹ️ Por enquanto, só suportamos arquivos de texto (.txt).<br>Você pode copiar e colar o conteúdo em um bloco de notas e salvar como .txt!';
