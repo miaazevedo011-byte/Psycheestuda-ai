@@ -116,61 +116,30 @@ function copiarResumo() {
         .catch(() => alert('Não foi possível copiar'));
 }
 
-// 🆕 Gerar resumo com IA
-async function gerarResumoIA() {
-    if (!textoExtraido) {
-        alert('Selecione um arquivo primeiro!');
-        return;
-    }
-    
-    if (GEMINI_API_KEY === 'COLOQUE-SUA-CHAVE-AQUI') {
-        alert('⚠️ Coloque sua chave da API do Gemini no código primeiro!\nVeja as instruções no passo a passo.');
-        return;
-    }
-    
-    const botao = document.getElementById('btn-resumo-ia');
-    botao.disabled = true;
-    botao.innerHTML = '⏳ Gerando resumo...';
-    
-    try {
-        const textoParaResumir = textoExtraido.substring(0, 15000); // Limite de caracteres
-        
-        const resposta = await fetch(
-            ``https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`
-}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `Você é um assistente de estudos. Faça um resumo claro, bem organizado por tópicos e fácil de estudar do texto abaixo. Use títulos e marcadores. Texto: ${textoParaResumir}`
-                        }]
-                    }]
-                })
-            }
-        );
-        
-        const dados = await resposta.json();
-        
-        if (dados.candidates && dados.candidates[0].content) {
-            const resumo = dados.candidates[0].content.parts[0].text;
-            document.getElementById('texto-resumo').innerHTML = formatarResumo(resumo);
-            document.getElementById('resultado-resumo').style.display = 'block';
-        } else {
-            alert('Erro ao gerar resumo. Verifique sua chave da API.');
-        }
-    } catch (erro) {
-        alert('Erro: ' + erro.message);
-    }
-    
-    botao.disabled = false;
-    botao.innerHTML = '✨ Gerar Resumo com IA';
-}
+// ✨ Gerar resumo (versão simples - sem API)
+function gerarResumoIA() {
+  if (!textoExtraido) {
+    alert('Selecione um arquivo primeiro!');
+    return;
+  }
 
-// Formatar o resumo para exibir melhor
-function formatarResumo(texto) {
-    return texto
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n/g, '<br>');
+  // Mostra o texto completo
+  document.getElementById('texto-resumo').innerHTML = 
+    '<strong>📄 Texto extraído:</strong><br><br>' + 
+    textoExtraido.substring(0, 5000) + 
+    (textoExtraido.length > 5000 ? '...' : '');
+  
+  document.getElementById('resultado-resumo').style.display = 'block';
+  document.getElementById('botoes-acao').style.display = 'flex';
+  
+  // Gera um resumo básico
+  const frases = textoExtraido.split(/[.!?]/).filter(f => f.trim().length > 20);
+  const resumo = frases.slice(0, 5).join('. ');
+  
+  setTimeout(() => {
+    document.getElementById('texto-resumo').innerHTML = 
+      '<strong>📝 Resumo:</strong><br><br>' + 
+      (resumo || textoExtraido.substring(0, 800) + '...') +
+      '<br><br><em>✨ Versão com IA em breve!</em>';
+  }, 800);
 }
