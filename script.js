@@ -1,350 +1,20 @@
-// ==============================================
-// PSICOESTUDA-AI — script.js COMPLETO
-// ==============================================
-
-// Armazena o texto extraído
-let textoExtraido = '';
-
-// ==============================================
-// NAVEGAÇÃO ENTRE PÁGINAS
-// ==============================================
-
-function mostrarPagina(paginaId) {
-  document.querySelectorAll('main > div').forEach(p => p.style.display = 'none');
-  const alvo = document.getElementById(paginaId);
-  if (alvo) alvo.style.display = 'block';
+// Mostrar uma página e esconder as outras
+function mostrarPagina(idPagina) {
+  // Esconde todas as páginas
+  const paginas = document.querySelectorAll('main > div');
+  paginas.forEach(p => p.style.display = 'none');
+  
+  // Mostra a página selecionada
+  const pagina = document.getElementById(idPagina);
+  if (pagina) pagina.style.display = 'block';
 }
 
+// Voltar para a página inicial
 function voltarInicio() {
-  document.querySelectorAll('main > div').forEach(p => p.style.display = 'none');
-  document.getElementById('pagina-inicio').style.display = 'block';
+  mostrarPagina('pagina-inicial');
 }
 
-function mostrarMeuEspaco() {
-  document.querySelectorAll('main > div').forEach(p => p.style.display = 'none');
-  document.getElementById('pagina-meuespaco').style.display = 'block';
-}
-
-function showSection(section) {
-  document.querySelectorAll('main > div').forEach(p => p.style.display = 'none');
-  if (section === 'materiais') {
-    document.getElementById('pagina-materiais').style.display = 'block';
-  }
-}
-
-// ==============================================
-// LEITURA DE ARQUIVOS E GERAÇÃO DE RESUMOS
-// ==============================================
-
-document.addEventListener('DOMContentLoaded', function() {
-  const inputArquivo = document.getElementById('arquivo-input');
-  
-  if (inputArquivo) {
-    inputArquivo.addEventListener('change', function(e) {
-      const arquivo = e.target.files[0];
-      if (!arquivo) return;
-
-      document.getElementById('nome-arquivo').textContent = arquivo.name;
-      document.getElementById('arquivo-info').style.display = 'block';
-      document.getElementById('resultado-resumo').style.display = 'none';
-      
-      lerArquivo(arquivo);
-    });
-  }
-});
-
-async function lerArquivo(arquivo) {
-  const extensao = arquivo.name.split('.').pop().toLowerCase();
-  
-  try {
-    if (extensao === 'pdf') {
-      textoExtraido = await lerPDF(arquivo);
-    } else if (extensao === 'docx') {
-      textoExtraido = await lerWord(arquivo);
-    } else if (extensao === 'txt') {
-      textoExtraido = await lerTXT(arquivo);
-    } else {
-      alert('Formato não suportado!');
-      return;
-    }
-    console.log('Texto extraído com sucesso!');
-  } catch (erro) {
-    alert('Erro ao ler o arquivo: ' + erro.message);
-  }
-}
-
-async function lerPDF(arquivo) {
-  const leitor = new FileReader();
-  return new Promise((resolve, reject) => {
-    leitor.onload = async function(e) {
-      const pdf = await pdfjsLib.getDocument({ data: e.target.result }).promise;
-      let texto = '';
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const pagina = await pdf.getPage(i);
-        const conteudo = await pagina.getTextContent();
-        texto += conteudo.items.map(item => item.str).join(' ') + ' ';
-      }
-      resolve(texto);
-    };
-    leitor.onerror = reject;
-    leitor.readAsArrayBuffer(arquivo);
-  });
-}
-
-async function lerWord(arquivo) {
-  const leitor = new FileReader();
-  return new Promise((resolve, reject) => {
-    leitor.onload = async function(e) {
-      const resultado = await mammoth.extractRawText({ arrayBuffer: e.target.result });
-      resolve(resultado.value);
-    };
-    leitor.onerror = reject;
-    leitor.readAsArrayBuffer(arquivo);
-  });
-}
-
-async function lerTXT(arquivo) {
-  const leitor = new FileReader();
-  return new Promise((resolve, reject) => {
-    leitor.onload = function(e) {
-      resolve(e.target.result);
-    };
-    leitor.onerror = reject;
-    leitor.readAsText(arquivo);
-  });
-}
-
-function copiarResumo() {
-  if (!textoExtraido) {
-    alert('Gere um resumo primeiro!');
-    return;
-  }
-  navigator.clipboard.writeText(textoExtraido)
-    .then(() => alert('Texto copiado! ✅'))
-    .catch(() => alert('Não foi possível copiar'));
-}
-
-function gerarResumo() {
-  if (!textoExtraido) {
-    alert('Selecione um arquivo primeiro!');
-    return;
-  }
-
-  const resumo = criarResumoBasico(textoExtraido);
-  
-  document.getElementById('texto-resumo').innerHTML = 
-    '<strong>📝 Resumo:</strong><br>' + resumo;
-  document.getElementById('resultado-resumo').style.display = 'block';
-  document.getElementById('botoes-acao').style.display = 'flex';
-}
-
-function criarResumoBasico(texto) {
-  const frases = texto.split(/[.!?]/).filter(f => f.trim().length > 20);
-  return frases.slice(0, 5).join('. ');
-}
-
-// ==============================================
-// BANCO DE DADOS — TODO O CONTEÚDO
-// ==============================================
-
-const conteudos = {
-  // ENCICLOPÉDIA
-  'enc-psicologia-geral': {
-    pagina: 'enciclopedia',
-    titulo: 'Psicologia Geral',
-    texto: 'É o estudo dos processos psicológicos básicos: sensação, percepção, atenção, memória, pensamento, linguagem e emoção. Busca compreender como a mente humana funciona e como percebemos e interagimos com o mundo.'
-  },
-  'enc-desenvolvimento': {
-    pagina: 'enciclopedia',
-    titulo: 'Psicologia do Desenvolvimento',
-    texto: 'Estuda as mudanças que ocorrem no ser humano ao longo do tempo, desde a concepção até a velhice. Analisa o desenvolvimento físico, cognitivo, social e emocional em cada fase da vida.'
-  },
-  'enc-social': {
-    pagina: 'enciclopedia',
-    titulo: 'Psicologia Social',
-    texto: 'Estuda como as pessoas pensam, sentem e se comportam em relação aos outros. Analisa influências sociais, atitudes, estereótipos, comunicação, liderança e relações de grupo.'
-  },
-  'enc-clinica': {
-    pagina: 'enciclopedia',
-    titulo: 'Psicologia Clínica',
-    texto: 'Foca na avaliação, diagnóstico e tratamento de questões emocionais e comportamentais. Tem como objetivo promover a saúde mental, o bem-estar e a qualidade de vida das pessoas.'
-  },
-  'enc-aprendizagem': {
-    pagina: 'enciclopedia',
-    titulo: 'Psicologia da Aprendizagem',
-    texto: 'Estuda como as pessoas adquirem, retêm e recuperam conhecimentos. Investiga processos de condicionamento, aprendizagem social, memória e transferência de conhecimento.'
-  },
-  'enc-personalidade': {
-    pagina: 'enciclopedia',
-    titulo: 'Psicologia da Personalidade',
-    texto: 'Busca compreender os padrões consistentes de pensamentos, sentimentos e comportamentos que diferenciam as pessoas. Estuda teorias como psicanálise, traços, humanismo e comportamentalismo.'
-  },
-
-  // AUTORES
-  'aut-freud': {
-    pagina: 'autores',
-    titulo: 'Sigmund Freud — Psicanálise',
-    texto: '(1856–1939) Médico austríaco, fundador da Psicanálise. Propôs que grande parte do nosso comportamento é influenciada por processos inconscientes. Criou conceitos como id, ego e superego, além das fases do desenvolvimento psicossexual.'
-  },
-  'aut-piaget': {
-    pagina: 'autores',
-    titulo: 'Jean Piaget — Desenvolvimento Cognitivo',
-    texto: '(1896–1980) Biólogo e psicólogo suíço. É considerado o maior estudioso do desenvolvimento infantil. Identificou 4 fases do desenvolvimento cognitivo: sensório-motor, pré-operacional, operatório concreto e operatório formal.'
-  },
-  'aut-skinner': {
-    pagina: 'autores',
-    titulo: 'B.F. Skinner — Behaviorismo',
-    texto: '(1904–1990) Psicólogo americano, principal representante do behaviorismo radical. Desenvolveu o conceito de condicionamento operante, enfatizando o papel das consequências (reforço e punição) na moldagem do comportamento.'
-  },
-  'aut-rogers': {
-    pagina: 'autores',
-    titulo: 'Carl Rogers — Psicologia Humanista',
-    texto: '(1902–1987) Psicólogo americano, um dos fundadores da abordagem humanista. Defendia que cada pessoa tem um potencial inato de crescimento. Desenvolveu a Terapia Centrada na Pessoa, baseada em empatia, aceitação e autenticidade.'
-  },
-  'aut-vygotsky': {
-    pagina: 'autores',
-    titulo: 'Lev Vygotsky — Abordagem Sociocultural',
-    texto: '(1896–1934) Psicólogo russo. Defendia que o aprendizado é um processo social. Criou o conceito de Zona de Desenvolvimento Proximal — aquilo que a pessoa consegue fazer com ajuda, mas ainda sozinha não consegue.'
-  },
-
-  // LINHA DO TEMPO
-  'lt-1879': {
-    pagina: 'linhatempo',
-    titulo: '1879 — Fundação do primeiro laboratório',
-    texto: 'Wilhelm Wundt fundou, na Universidade de Leipzig (Alemanha), o primeiro laboratório dedicado exclusivamente à pesquisa psicológica. Marco que separou a Psicologia da Filosofia, tornando-a uma ciência independente.'
-  },
-  'lt-1900': {
-    pagina: 'linhatempo',
-    titulo: '1900 — Nascimento da Psicanálise',
-    texto: 'Sigmund Freud publicou "A Interpretação dos Sonhos", marco inicial da Psicanálise. Introduziu a ideia de que processos inconscientes influenciam nosso comportamento.'
-  },
-  'lt-1913': {
-    pagina: 'linhatempo',
-    titulo: '1913 — Surgimento do Behaviorismo',
-    texto: 'John Watson publicou um manifesto defendendo que a Psicologia deveria estudar apenas o comportamento observável, e não a "mente". O behaviorismo dominou a área por quase 50 anos.'
-  },
-  'lt-1950': {
-    pagina: 'linhatempo',
-    titulo: '1950 — Psicologia Humanista',
-    texto: 'Surgiu como "terceira força", rejeitando tanto a visão determinista da psicanálise quanto a limitação do behaviorismo. Valorizou a experiência subjetiva, o livre-arbítrio e o potencial humano.'
-  },
-  'lt-1960': {
-    pagina: 'linhatempo',
-    titulo: '1960 — Revolução Cognitiva',
-    texto: 'Os psicólogos voltaram a estudar processos mentais: memória, pensamento, tomada de decisão. A psicologia cognitiva se consolidou, aproximando-se das ciências da computação e neurociência.'
-  },
-
-  // CONTEÚDOS
-  'con-introducao': {
-    pagina: 'conteudos',
-    titulo: 'Introdução à Psicologia',
-    texto: 'A Psicologia é a ciência que estuda o comportamento e os processos mentais do ser humano. Sua palavra vem do grego: psique = alma/mente; logos = estudo/conhecimento. Objetiva compreender, explicar e prever o comportamento humano.'
-  },
-  'con-metodologia': {
-    pagina: 'conteudos',
-    titulo: 'Metodologia Científica',
-    texto: 'Conjunto de procedimentos sistemáticos usados para investigar fenômenos. Passos principais: observação, formulação de problema, hipótese, coleta de dados, análise e conclusão. Tipos de pesquisa: experimental, correlacional, descritiva e estudo de caso.'
-  },
-  'con-bases': {
-    pagina: 'conteudos',
-    titulo: 'Bases Biológicas do Comportamento',
-    texto: 'O sistema nervoso e o sistema endócrino regulam nossas ações, emoções e pensamentos. O neurônio é a unidade básica do sistema nervoso. O cérebro é dividido em lóbulos com funções especializadas.'
-  },
-  'con-aprendizagem': {
-    pagina: 'conteudos',
-    titulo: 'Processos de Aprendizagem',
-    texto: 'Aprendizagem é qualquer mudança relativamente permanente no comportamento resultante da experiência. Principais tipos: condicionamento clássico (Pavlov), condicionamento operante (Skinner) e aprendizagem observacional (Bandura).'
-  },
-
-  // GLOSSÁRIO
-  'glo-consciencia': {
-    pagina: 'glossario',
-    titulo: 'Consciência',
-    texto: 'Estado de estar ciente de si mesmo e do ambiente ao redor. Inclui pensamentos, sentimentos, percepções e memórias que podemos trazer voluntariamente à mente.'
-  },
-  'glo-percepcao': {
-    pagina: 'glossario',
-    titulo: 'Percepção',
-    texto: 'Processo pelo qual organizamos e interpretamos as informações recebidas pelos sentidos. Não é apenas uma "foto" do mundo — é uma construção mental.'
-  },
-  'glo-memoria': {
-    pagina: 'glossario',
-    titulo: 'Memória',
-    texto: 'Capacidade de armazenar e recuperar informações. Divide-se em três etapas: codificação, armazenamento e recuperação. Possui três sistemas sensoriais, de curta duração e de longa duração.'
-  },
-  'glo-emocao': {
-    pagina: 'glossario',
-    titulo: 'Emoção',
-    texto: 'Reação subjetiva a eventos importantes, envolvendo mudanças fisiológicas, sentimentos e expressão. Emoções básicas: alegria, tristeza, raiva, medo, surpresa e desgosto.'
-  },
-  'glo-motivacao': {
-    pagina: 'glossario',
-    titulo: 'Motivação',
-    texto: 'Conjunto de fatores que nos impulsionam a agir e a manter um comportamento. Pode vir de necessidades biológicas (fome, sono) ou sociais (reconhecimento, pertencimento).'
-  },
-  'glo-inteligencia': {
-    pagina: 'glossario',
-    titulo: 'Inteligência',
-    texto: 'Capacidade de compreender, raciocinar, resolver problemas e se adaptar ao ambiente. Não é uma habilidade única — existem diferentes tipos: lógico, verbal, espacial, emocional, entre outros.'
-  },
-
-  // DISCIPLINAS
-  'disc-psigeral': {
-    pagina: 'disciplinas',
-    titulo: 'Psicologia Geral',
-    texto: 'Apresentação histórica e conceitual da Psicologia. Estudo dos processos psicológicos básicos: sensação, percepção, atenção, memória, pensamento, inteligência, linguagem, emoção e motivação.'
-  },
-  'disc-biologica': {
-    pagina: 'disciplinas',
-    titulo: 'Bases Biológicas do Comportamento',
-    texto: 'Estudo da relação entre o funcionamento do organismo e o comportamento. Sistema nervoso, sistema endócrino, genética, estruturas cerebrais e como elas influenciam nossas ações.'
-  },
-  'disc-metodologia': {
-    pagina: 'disciplinas',
-    titulo: 'Metodologia Científica em Psicologia',
-    texto: 'Princípios da pesquisa científica. Métodos quantitativos e qualitativos. Ética na pesquisa com seres humanos. Como planejar, executar e interpretar um estudo científico.'
-  },
-  'disc-desenvolvimento': {
-    pagina: 'disciplinas',
-    titulo: 'Psicologia do Desenvolvimento',
-    texto: 'Estudo do desenvolvimento humano desde a concepção até a velhice. Mudanças físicas, cognitivas, socioemocionais e de personalidade em cada etapa da vida.'
-  },
-  'disc-social': {
-    pagina: 'disciplinas',
-    titulo: 'Psicologia Social',
-    texto: 'Como o ambiente social influencia pensamentos, sentimentos e ações. Temas: percepção social, atitudes, comunicação, influência de grupo, relações interpessoais e preconceito.'
-  },
-  'disc-clinica': {
-    pagina: 'disciplinas',
-    titulo: 'Psicologia Clínica',
-    texto: 'História, campos de atuação e princípios da avaliação e intervenção clínica. Principais abordagens teóricas: psicanálise, behaviorismo, humanismo, cognitivo-comportamental, entre outras.'
-  }
-};
-
-// ==============================================
-// FUNÇÕES GERAIS — FUNCIONAM EM TODAS AS PÁGINAS
-// ==============================================
-
-function verItem(id) {
-  const item = conteudos[id];
-  if (!item) return;
-
-  document.getElementById(`lista-${item.pagina}`).style.display = 'none';
-  document.getElementById(`conteudo-${item.pagina}`).style.display = 'block';
-  document.getElementById(`titulo-${item.pagina}`).textContent = item.titulo;
-  document.getElementById(`texto-${item.pagina}`).textContent = item.texto;
-}
-
-function fecharLista(pagina) {
-  document.getElementById(`conteudo-${pagina}`).style.display = 'none';
-  document.getElementById(`lista-${pagina}`).style.display = 'block';
-}
-
-function buscarEnciclopedia() {
-  const termo = document.getElementById('busca-enciclopedia').value.toLowerCase();
-  alert(`Buscando por: "${termo}"... ✨ Em breve resultados completos!`);
-}
-
+// Mostrar abas dentro da Biblioteca
 function mostrarAba(nomeAba) {
   document.getElementById('conteudo-meus-arquivos').style.display = 'none';
   document.getElementById('conteudo-livros').style.display = 'none';
@@ -354,6 +24,135 @@ function mostrarAba(nomeAba) {
   document.getElementById('aba-livros').style.background = '#ccc';
   document.getElementById('aba-favoritos').style.background = '#ccc';
   
-  document.getElementById(`conteudo-${nomeAba}`).style.display = 'block';
-  document.getElementById(`aba-${nomeAba}`).style.background = '#4A6FA5';
+  document.getElementById('conteudo-' + nomeAba).style.display = 'block';
+  document.getElementById('aba-' + nomeAba).style.background = '#4A6FA5';
 }
+
+// Dados de exemplo para os itens
+const dadosItens = {
+  'enc-psicologia-geral': { titulo: 'Psicologia Geral', texto: 'É o ramo que estuda os processos psicológicos fundamentais: sensação, percepção, atenção, memória, pensamento, linguagem, inteligência, motivação e emoção. Busca compreender como o ser humano percebe o mundo e interage com ele.' },
+  'enc-desenvolvimento': { titulo: 'Psicologia do Desenvolvimento', texto: 'Estuda as mudanças que ocorrem ao longo da vida, desde a concepção até a morte. Abrange desenvolvimento físico, cognitivo, emocional e social em cada fase da vida.' },
+  'enc-social': { titulo: 'Psicologia Social', texto: 'Analisa como o indivíduo influencia e é influenciado pelo meio social. Estuda temas como atitudes, preconceito, comunicação, liderança e comportamento em grupos.' },
+  'enc-clinica': { titulo: 'Psicologia Clínica', texto: 'Dedica-se à prevenção, avaliação, diagnóstico e tratamento de questões relacionadas à saúde mental e bem-estar emocional.' },
+  'enc-aprendizagem': { titulo: 'Psicologia da Aprendizagem', texto: 'Investiga como aprendemos: os processos mentais e comportamentais que possibilitam a aquisição de novos conhecimentos, habilidades e condutas.' },
+  'enc-personalidade': { titulo: 'Psicologia da Personalidade', texto: 'Estuda as características psicológicas que tornam cada pessoa única e consistente ao longo do tempo. Inclui teorias sobre traços, temperamento e formação da personalidade.' },
+  
+  'aut-freud': { titulo: 'Sigmund Freud – Psicanálise', texto: 'Fundador da Psicanálise. Sua teoria destaca o inconsciente como força motriz do comportamento humano. Conceitos fundamentais: id, ego e superego; mecanismos de defesa; fases do desenvolvimento psicossexual.' },
+  'aut-piaget': { titulo: 'Jean Piaget – Desenvolvimento Cognitivo', texto: 'Propus a teoria dos estágios do desenvolvimento cognitivo: sensório-motor, pré-operatório, operatório concreto e operatório formal. Explica como a criança constrói conhecimento e pensamento lógico.' },
+  'aut-skinner': { titulo: 'B.F. Skinner – Behaviorismo Radical', texto: 'Defendia que o comportamento é moldado por reforço e punição. Desenvolveu o conceito de condicionamento operante: comportamentos seguidos de recompensas tendem a se repetir.' },
+  'aut-rogers': { titulo: 'Carl Rogers – Abordagem Humanista', texto: 'Enfatizou o potencial humano e a busca pela autorrealização. Acreditava que pessoas crescem em um ambiente de empatia, aceitação e compreensão.' },
+  'aut-vygotsky': { titulo: 'Lev Vygotsky – Teoria Sociocultural', texto: 'O aprendizado é um processo social. Introduziu o conceito de Zona de Desenvolvimento Proximal — o que a criança consegue fazer com ajuda de alguém mais experiente.' },
+  
+  'lt-1879': { titulo: '1879 – Fundação do primeiro laboratório', texto: 'Wilhelm Wundt fundou o primeiro laboratório de Psicologia em Leipzig, na Alemanha. Marco que separou a Psicologia da Filosofia, tornando-a uma ciência independente.' },
+  'lt-1900': { titulo: '1900 – Nascimento da Psicanálise', texto: 'Com a publicação de "A Interpretação dos Sonhos", Sigmund Freud inaugura a Psicanálise, trazendo a importância do inconsciente para a compreensão humana.' },
+  'lt-1913': { titulo: '1913 – Surgimento do Behaviorismo', texto: 'John Watson publica "Psicologia como Comportamento", defendendo que a Psicologia deve estudar apenas o comportamento observável e mensurável.' },
+  'lt-1950': { titulo: '1950 – Psicologia Humanista', texto: 'Surge como "terceira força", rejeitando a visão do comportamento como apenas reação a estímulos e a ênfase psicanalítica no inconsciente. Valoriza o livre-arbítrio e o crescimento pessoal.' },
+  'lt-1960': { titulo: '1960 – Revolução Cognitiva', texto: 'Retoma o estudo dos processos mentais — pensamento, memória, percepção — que o Behaviorismo havia ignorado. A mente passa a ser vista como um processador de informações.' },
+  
+  'con-introducao': { titulo: 'Introdução à Psicologia', texto: 'A palavra "psicologia" vem do grego: psique = alma; logos = estudo. Originalmente significava "estudo da alma". Hoje define-se como a ciência que estuda o comportamento e os processos mentais do ser humano.' },
+  'con-metodologia': { titulo: 'Metodologia Científica', texto: 'Conjunto de procedimentos sistemáticos usados para investigar fenômenos. Etapas principais: observação, formulação de hipótese, experimentação, análise de dados e conclusão.' },
+  'con-bases': { titulo: 'Bases Biológicas do Comportamento', texto: 'O sistema nervoso, o cérebro e os neurotransmissores influenciam diretamente como pensamos, sentimos e agimos. A conexão mente-corpo é fundamental para compreender o comportamento.' },
+  'con-aprendizagem': { titulo: 'Processos de Aprendizagem', texto: 'Aprendizagem é a mudança relativamente estável de comportamento, resultado da experiência. Principais teorias: condicionamento clássico, condicionamento operante e aprendizagem social.' },
+  
+  'glo-consciencia': { titulo: 'Consciência', texto: 'Estado de estar ciente de si mesmo e do ambiente ao redor. Inclui pensamentos, sentimentos, percepções e memórias que podemos trazer ao foco da atenção.' },
+  'glo-percepcao': { titulo: 'Percepção', texto: 'Processo pelo qual organizamos e interpretamos as informações que recebemos pelos sentidos. Não é apenas uma cópia da realidade — é uma construção mental.' },
+  'glo-memoria': { titulo: 'Memória', texto: 'Capacidade de codificar, armazenar e recuperar informações. Divide-se sensorial, de curto prazo e de longo prazo. Esquecer faz parte do processo natural.' },
+  'glo-emocao': { titulo: 'Emoção', texto: 'Reação subjetiva a estímulos, envolvendo mudanças fisiológicas, sentimentos e expressão comportamental. Exemplos: alegria, medo, raiva, tristeza.' },
+  'glo-motivacao': { titulo: 'Motivação', texto: 'Conjunto de motivos que impulsionam e direcionam o comportamento. Pode vir de necessidades biológicas (fome, sono) ou sociais (reconhecimento, pertencimento).' },
+  'glo-inteligencia': { titulo: 'Inteligência', texto: 'Capacidade de compreender, aprender, raciocinar, resolver problemas e adaptar-se ao ambiente. Não é uma capacidade única — existem diferentes tipos de inteligência.' },
+  
+  'disc-psigeral': { titulo: 'Psicologia Geral', texto: 'Apresenta os conceitos fundamentais da Psicologia: história, métodos de estudo, processos psicológicos básicos e principais áreas de atuação profissional.' },
+  'disc-biologica': { titulo: 'Bases Biológicas', texto: 'Estuda a relação entre o funcionamento do organismo — sistema nervoso, sistema endócrino, genética — e o comportamento humano.' },
+  'disc-metodologia': { titulo: 'Metodologia Científica', texto: 'Ensina a planejar, executar e analisar pesquisas. Inclui métodos quantitativos e qualitativos, coleta de dados e redação de relatórios científicos.' },
+  'disc-desenvolvimento': { titulo: 'Psicologia do Desenvolvimento', texto: 'Acompanha o desenvolvimento humano do nascimento à morte: físico, cognitivo, afetivo e social em cada etapa da vida.' },
+  'disc-social': { titulo: 'Psicologia Social', texto: 'Compreende como pensamentos, sentimentos e comportamentos das pessoas são influenciados pela presença dos outros e pelo ambiente social.' },
+  'disc-clinica': { titulo: 'Psicologia Clínica', texto: 'Fundamentos da prática clínica: relação terapeuta-paciente, ética, avaliação psicológica, principais transtornos e abordagens terapêuticas.' }
+};
+
+// Ver detalhes de um item
+function verItem(idItem) {
+  const paginas = ['enciclopedia', 'autores', 'linhatempo', 'conteudos', 'glossario', 'disciplinas'];
+  
+  for (let pagina of paginas) {
+    const lista = document.getElementById('lista-' + pagina);
+    const conteudo = document.getElementById('conteudo-' + pagina);
+    const dados = dadosItens[idItem];
+    
+    if (lista && conteudo && dados) {
+      lista.style.display = 'none';
+      conteudo.style.display = 'block';
+      document.getElementById('titulo-' + pagina).textContent = dados.titulo;
+      document.getElementById('texto-' + pagina).textContent = dados.texto;
+      return;
+    }
+  }
+}
+
+// Fechar detalhes e voltar à lista
+function fecharLista(nomePagina) {
+  document.getElementById('lista-' + nomePagina).style.display = 'block';
+  document.getElementById('conteudo-' + nomePagina).style.display = 'none';
+}
+
+// Buscar na enciclopédia
+function buscarEnciclopedia() {
+  const termo = document.getElementById('busca-enciclopedia').value.toLowerCase();
+  alert('Você buscou por: "' + termo + '" — em breve teremos busca completa!');
+}
+
+// Ler arquivo e gerar resumo
+function lerArquivo() {
+  const input = document.getElementById('arquivo-input');
+  const resultado = document.getElementById('resultado-resumo');
+  
+  if (!input.files || input.files.length === 0) {
+    resultado.style.display = 'block';
+    resultado.innerHTML = '⚠️ Por favor, selecione um arquivo primeiro!';
+    return;
+  }
+  
+  const arquivo = input.files[0];
+  const leitor = new FileReader();
+  
+  leitor.onload = function(e) {
+    const texto = e.target.result;
+    
+    // Resumo simples — contém os primeiros caracteres
+    const resumo = texto.length > 500 ? texto.substring(0, 500) + '...' : texto;
+    
+    resultado.style.display = 'block';
+    resultado.innerHTML = '✅ <strong>Resumo de: ' + arquivo.name + '</strong><br><br>' + resumo;
+  };
+  
+  leitor.onerror = function() {
+    resultado.style.display = 'block';
+    resultado.innerHTML = '❌ Erro ao ler o arquivo. Tente com um arquivo de texto (.txt).';
+  };
+  
+  // Só funciona com arquivos de texto simples
+  if (arquivo.type === 'text/plain' || arquivo.name.endsWith('.txt')) {
+    leitor.readAsText(arquivo);
+  } else {
+    resultado.style.display = 'block';
+    resultado.innerHTML = 'ℹ️ Por enquanto, só suportamos arquivos de texto (.txt).<br>Você pode copiar e colar o conteúdo em um bloco de notas e salvar como .txt!';
+  }
+}
+
+// Mostrar nome do arquivo selecionado
+document.addEventListener('DOMContentLoaded', function() {
+  const inputArquivo = document.getElementById('arquivo-input');
+  if (inputArquivo) {
+    inputArquivo.addEventListener('change', function() {
+      const nomeArquivo = document.getElementById('nome-arquivo');
+      if (this.files && this.files[0]) {
+        nomeArquivo.textContent = '✅ Selecionado: ' + this.files[0].name;
+        nomeArquivo.style.display = 'block';
+      } else {
+        nomeArquivo.style.display = 'none';
+      }
+    });
+  }
+  
+  // Inicializar na página inicial
+  mostrarPagina('pagina-inicial');
+});
