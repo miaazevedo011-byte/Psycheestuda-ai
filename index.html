@@ -141,10 +141,15 @@
                 </div>
 
                 <div id="resultado-resumo" style="display: none; margin-top: 30px;">
-                    <h2>📋 Conteúdo Extraído do Arquivo</h2>
-                    <div class="resumo-box" id="texto-resumo"></div>
-                    <button class="btn-copiar" onclick="copiarResumo()">📋 Copiar texto</button>
-                </div>
+    <h2>📋 Conteúdo Extraído do Arquivo</h2>
+    <div class="resumo-box" id="texto-resumo"></div>
+    
+    <div id="botoes-acao" style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+        <button class="btn-copiar" onclick="copiarResumo()">📋 Copiar texto</button>
+        <button class="btn-ia" id="btn-resumo-ia" onclick="gerarResumoIA()">✨ Gerar Resumo com IA</button>
+    </div>
+</div>
+
 
                 <div style="margin-top: 40px;">
                     <h2>📚 Conteúdo Base — Abordagens da Psicologia</h2>
