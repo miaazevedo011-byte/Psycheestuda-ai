@@ -145,3 +145,65 @@ function criarResumoBasico(texto) {
   const frases = texto.split(/[.!?]/).filter(f => f.trim().length > 20);
   return frases.slice(0, 5).join('. ');
 }
+// ==============================================
+// FUNÇÕES DA ENCICLOPÉDIA
+// ==============================================
+
+const verbetesEnciclopedia = {
+  'psicologia-geral': {
+    titulo: 'Psicologia Geral',
+    texto: 'É o estudo dos processos psicológicos básicos: sensação, percepção, atenção, memória, pensamento, linguagem e emoção. Busca compreender como a mente humana funciona.'
+  },
+  'desenvolvimento': {
+    titulo: 'Psicologia do Desenvolvimento',
+    texto: 'Estuda as mudanças que ocorrem no ser humano ao longo do tempo, desde a concepção até a velhice. Analisa desenvolvimento físico, cognitivo e socioemocional.'
+  },
+  'social': {
+    titulo: 'Psicologia Social',
+    texto: 'Estuda como as pessoas pensam, sentem e se comportam em relação aos outros. Analisa influências sociais, atitudes, estereótipos, comunicação e relações de grupo.'
+  },
+  'clínica': {
+    titulo: 'Psicologia Clínica',
+    texto: 'Foca na avaliação, diagnóstico e tratamento de questões emocionais e comportamentais. Tem como objetivo promover a saúde mental e o bem-estar.'
+  }
+};
+
+function verTermo(id) {
+  const termo = verbetesEnciclopedia[id];
+  if (termo) {
+    document.getElementById('lista-enciclopedia').style.display = 'none';
+    document.getElementById('conteudo-termo').style.display = 'block';
+    document.getElementById('titulo-termo').textContent = termo.titulo;
+    document.getElementById('texto-termo').textContent = termo.texto;
+  }
+}
+
+function fecharTermo() {
+  document.getElementById('lista-enciclopedia').style.display = 'block';
+  document.getElementById('conteudo-termo').style.display = 'none';
+}
+
+function buscarEnciclopedia() {
+  const termo = document.getElementById('busca-enciclopedia').value.toLowerCase();
+  alert(`Buscando por: "${termo}"... (em breve resultados completos!)`);
+}
+
+// ==============================================
+// FUNÇÕES DA BIBLIOTECA
+// ==============================================
+
+function mostrarAba(nomeAba) {
+  // Esconde todos os conteúdos
+  document.getElementById('conteudo-meus-arquivos').style.display = 'none';
+  document.getElementById('conteudo-livros').style.display = 'none';
+  document.getElementById('conteudo-favoritos').style.display = 'none';
+  
+  // Reseta cores dos botões
+  document.getElementById('aba-meus-arquivos').style.background = '#ccc';
+  document.getElementById('aba-livros').style.background = '#ccc';
+  document.getElementById('aba-favoritos').style.background = '#ccc';
+  
+  // Mostra o conteúdo selecionado
+  document.getElementById(`conteudo-${nomeAba}`).style.display = 'block';
+  document.getElementById(`aba-${nomeAba}`).style.background = '#4A6FA5';
+}
