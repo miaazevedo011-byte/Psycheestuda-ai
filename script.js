@@ -5,31 +5,34 @@
 // Armazena o texto extraído
 let textoExtraido = '';
 
-// Chave da API do Gemini — COLOQUE SUA CHAVE AQUI
+// Chave da API do Gemini
 const GEMINI_API_KEY = 'AQ.Ab8RN6LiP8Ys2oG2ZoVI6PAshQni63mtsg7BTE9MuEN5s24u1A';
 
 // ==============================================
 // NAVEGAÇÃO ENTRE PÁGINAS
 // ==============================================
 
-// Mostrar seção de Materiais
-function showSection(section) {
+function mostrarPagina(paginaId) {
   document.querySelectorAll('main > div').forEach(p => p.style.display = 'none');
-  if (section === 'materiais') {
-    document.getElementById('pagina-materiais').style.display = 'block';
-  }
+  const alvo = document.getElementById(paginaId);
+  if (alvo) alvo.style.display = 'block';
 }
 
-// Voltar para a Página Inicial
 function voltarInicio() {
   document.querySelectorAll('main > div').forEach(p => p.style.display = 'none');
   document.getElementById('pagina-inicio').style.display = 'block';
 }
 
-// Mostrar Meu Espaço
 function mostrarMeuEspaco() {
   document.querySelectorAll('main > div').forEach(p => p.style.display = 'none');
   document.getElementById('pagina-meuespaco').style.display = 'block';
+}
+
+function showSection(section) {
+  document.querySelectorAll('main > div').forEach(p => p.style.display = 'none');
+  if (section === 'materiais') {
+    document.getElementById('pagina-materiais').style.display = 'block';
+  }
 }
 
 // ==============================================
@@ -39,16 +42,18 @@ function mostrarMeuEspaco() {
 document.addEventListener('DOMContentLoaded', function() {
   const inputArquivo = document.getElementById('arquivo-input');
   
-  inputArquivo.addEventListener('change', function(e) {
-    const arquivo = e.target.files[0];
-    if (!arquivo) return;
+  if (inputArquivo) {
+    inputArquivo.addEventListener('change', function(e) {
+      const arquivo = e.target.files[0];
+      if (!arquivo) return;
 
-    document.getElementById('nome-arquivo').textContent = arquivo.name;
-    document.getElementById('arquivo-info').style.display = 'block';
-    document.getElementById('resultado-resumo').style.display = 'none';
-    
-    lerArquivo(arquivo);
-  });
+      document.getElementById('nome-arquivo').textContent = arquivo.name;
+      document.getElementById('arquivo-info').style.display = 'block';
+      document.getElementById('resultado-resumo').style.display = 'none';
+      
+      lerArquivo(arquivo);
+    });
+  }
 });
 
 async function lerArquivo(arquivo) {
@@ -113,7 +118,6 @@ async function lerTXT(arquivo) {
 }
 
 function copiarResumo() {
-  const elemento = document.getElementById('texto-resumo');
   if (!textoExtraido) {
     alert('Gere um resumo primeiro!');
     return;
