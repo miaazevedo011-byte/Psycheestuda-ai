@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PsicoEstuda AI — Seu espaço de estudos em Psicologia</title>
+    
+    <!-- Para ler PDFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+
+    <!-- Para ler arquivos Word (.docx) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Barra Lateral -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">Ψ</span>
+                <span>PsicoEstuda AI</span>
+            </div>
+            <nav class="menu">
+                <a href="#" class="menu-item active">🏠 Início</a>
+                <a href="#" class="menu-item">👤 Meu espaço</a>
+                <a href="#" class="menu-item" onclick="showSection('materiais')">📄 Materiais</a>
+                <a href="#" class="menu-item">✨ Estudar com IA</a>
+                <a href="#" class="menu-item">🃏 Flashcards</a>
+                <a href="#" class="menu-item">📊 Simulados</a>
+                <a href="#" class="menu-item">🔬 Pesquisa científica</a>
+                <a href="#" class="menu-item">📚 Enciclopédia</a>
+                <a href="#" class="menu-item">👥 Autores e teorias</a>
+                <a href="#" class="menu-item">⏳ Linha do tempo</a>
+                <a href="#" class="menu-item">📖 Biblioteca</a>
+                <a href="#" class="menu-item">🎧 Conteúdos</a>
+                <a href="#" class="menu-item">📝 Notas</a>
+                <a href="#" class="menu-item">📖 Glossário</a>
+                <a href="#" class="menu-item">🏫 Disciplinas</a>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content" id="main-content">
+            <!-- Página Início -->
+            <div id="pagina-inicio">
+                <h1>Seu espaço de estudos em Psicologia</h1>
+                <p class="subtitulo">Organize materiais, revise conceitos e avance na graduação no seu ritmo.</p>
+
+                <div class="grid-cards">
+                    <div class="card card-azul-claro">
+                        <h3>👤 Meu espaço</h3>
+                        <p>Sua rotina e visão geral</p>
+                    </div>
+                    <div class="card card-azul">
+                        <h3>📄 Materiais</h3>
+                        <p>Arquivos e leituras</p>
+                    </div>
+                    <div class="card card-laranja">
+                        <h3>✨ Estudar com IA</h3>
+                        <p>Resumos e explicações</p>
+                    </div>
+                    <div class="card card-amarelo">
+                        <h3>🃏 Flashcards</h3>
+                        <p>Memorização ativa</p>
+                    </div>
+                    <div class="card card-verde">
+                        <h3>📊 Simulados</h3>
+                        <p>Prática e revisão</p>
+                    </div>
+                    <div class="card card-azul-escuro">
+                        <h3>🔬 Pesquisa científica</h3>
+                        <p>Literatura acadêmica</p>
+                    </div>
+                </div>
+
+                <h2>Acompanhe seus estudos</h2>
+                <div class="grid-cards">
+                    <div class="card card-branco">
+                        <h4>📄 Seus materiais</h4>
+                        <p>Importe um PDF, Word, PNG ou JPEG para começar.</p>
+                    </div>
+                    <div class="card card-branco">
+                        <h4>🃏 Suas revisões</h4>
+                        <p>Use os flashcards quando esta área estiver disponível.</p>
+                    </div>
+                </div>
+
+                <h2>Ferramentas para a graduação</h2>
+                <div class="grid-cards">
+                    <div class="card card-pessego">
+                        <h4>📚 Enciclopédia</h4>
+                        <p>Conceitos da Psicologia</p>
+                    </div>
+                    <div class="card card-amarelo-claro">
+                        <h4>👥 Autores e teorias</h4>
+                        <p>Idéias que moldaram a área</p>
+                    </div>
+                    <div class="card card-verde-claro">
+                        <h4>⏳ Linha do tempo</h4>
+                        <p>História da Psicologia</p>
+                    </div>
+                    <div class="card card-azul-claro2">
+                        <h4>📖 Biblioteca</h4>
+                        <p>Obras para aprofundar</p>
+                    </div>
+                    <div class="card card-rosa">
+                        <h4>🎧 Conteúdos</h4>
+                        <p>Podcasts e palestras</p>
+                    </div>
+                    <div class="card card-amarelo-claro2">
+                        <h4>📖 Glossário</h4>
+                        <p>Termos e siglas</p>
+                    </div>
+                    <div class="card card-verde-claro2">
+                        <h4>🏫 Disciplinas</h4>
+                        <p>Plano de estudos</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Página Materiais -->
+            <div id="pagina-materiais" style="display: none;">
+                <h1>📄 Materiais de Estudo</h1>
+                <p class="subtitulo">Envie seus arquivos — o app lê o conteúdo de PDF, Word e TXT automaticamente!</p>
+
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">📁</div>
+                    <h3>Arraste seu arquivo aqui</h3>
+                    <p>ou clique para selecionar (PDF, DOCX, TXT)</p>
+                    <input type="file" id="arquivo-input" accept=".pdf,.docx,.txt" style="display: none;">
+                    <button class="btn-upload" onclick="document.getElementById('arquivo-input').click()">Escolher arquivo</button>
+                </div>
+
+                <div id="arquivo-info" style="display: none; margin-top: 20px;">
+                    <p><strong>Arquivo:</strong> <span id="nome-arquivo"></span></p>
+                    <button class="btn-resumir" onclick="gerarResumo()">📝 Ver texto lido</button>
+                </div>
+
+                <div id="resultado-resumo" style="display: none; margin-top: 30px;">
+                    <h2>📋 Conteúdo Extraído do Arquivo</h2>
+                    <div class="resumo-box" id="texto-resumo"></div>
+                    <button class="btn-copiar" onclick="copiarResumo()">📋 Copiar texto</button>
+                </div>
+
+                <div style="margin-top: 40px;">
+                    <h2>📚 Conteúdo Base — Abordagens da Psicologia</h2>
+                    <div class="conteudo-base">
+                        <h3>Principais Abordagens da Psicologia</h3>
+                        <p><strong>Psicanálise:</strong> Fundada por Sigmund Freud, centra-se no inconsciente, conflitos internos e processos mentais que influenciam o comportamento.</p>
+                        <p><strong>Behaviorismo:</strong> Foca no comportamento observável e nas leis da aprendizagem através de estímulos e respostas. Principais nomes: Watson, Skinner e Pavlov.</p>
+                        <p><strong>Psicologia Humanista:</strong> Enfatiza o potencial humano, livre-arbítrio e crescimento pessoal. Representantes: Carl Rogers e Abraham Maslow.</p>
+                        <p><strong>Psicologia Cognitivo-Comportamental (TCC):</strong> Analisa como pensamentos, sentimentos e comportamentos interagem, focando na reestruturação de crenças disfuncionais.</p>
+                        <p><strong>Psicologia Social:</strong> Estuda como o indivíduo influencia e é influenciado pelo ambiente social e pelas outras pessoas.</p>
+                        <p><strong>Psicologia do Desenvolvimento:</strong> Investiga as mudanças que ocorrem ao longo da vida, da infância à velhice.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
