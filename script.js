@@ -1,58 +1,175 @@
-// Mostrar seção Materiais
-function showSection(nome) {
+// Armazena o texto extraído
+let textoExtraido = '';
+
+// Chave da API do Gemini — COLOQUE SUA CHAVE AQUI
+const GEMINI_API_KEY = 'AQ.Ab8RN6LNUvp3wQ_vLk-DaA8DgZUOsW1qmmSb0GEtANIZ59FSfA';
+
+// Navegação entre seções
+function showSection(section) {
     document.getElementById('pagina-inicio').style.display = 'none';
     document.getElementById('pagina-materiais').style.display = 'block';
-    window.scrollTo(0, 0);
 }
 
-// Voltar para Início (clicar no logo ou Início)
+// Voltar para início
+function voltarInicio() {
+    document.getElementById('pagina-inicio').style.display = 'block';
+    document.getElementById('pagina-materiais').style.display = 'none';
+}
+
+// Leitura do arquivo
 document.addEventListener('DOMContentLoaded', function() {
-    const menuInicio = document.querySelector('.menu-item.active');
-    menuInicio.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('pagina-inicio').style.display = 'block';
-        document.getElementById('pagina-materiais').style.display = 'none';
+    const inputArquivo = document.getElementById('arquivo-input');
+    
+    inputArquivo.addEventListener('change', function(e) {
+        const arquivo = e.target.files[0];
+        if (!arquivo) return;
+        
+        document.getElementById('nome-arquivo').textContent = arquivo.name;
+        document.getElementById('arquivo-info').style.display = 'block';
+        document.getElementById('resultado-resumo').style.display = 'none';
+        
+        lerArquivo(arquivo);
     });
 });
 
-// Upload de arquivo
-const uploadArea = document.getElementById('upload-area');
-const arquivoInput = document.getElementById('arquivo-input');
-let arquivoCarregado = null;
-
-uploadArea.addEventListener('click', () => arquivoInput.click());
-
-arquivoInput.addEventListener('change', function(e) {
-    if (e.target.files.length > 0) {
-        arquivoCarregado = e.target.files[0];
-        document.getElementById('nome-arquivo').textContent = arquivoCarregado.name;
-        document.getElementById('arquivo-info').style.display = 'block';
+async function lerArquivo(arquivo) {
+    const extensao = arquivo.name.split('.').pop().toLowerCase();
+    
+    try {
+        if (extensao === 'pdf') {
+            textoExtraido = await lerPDF(arquivo);
+        } else if (extensao === 'docx') {
+            textoExtraido = await lerWord(arquivo);
+        } else if (extensao === 'txt') {
+            textoExtraido = await lerTXT(arquivo);
+        } else {
+            alert('Formato não suportado!');
+            return;
+        }
+        console.log('Texto extraído com sucesso!');
+    } catch (erro) {
+        alert('Erro ao ler o arquivo: ' + erro.message);
     }
-});
-
-// Gerar resumo (simulação — depois você conecta com uma IA real)
-function gerarResumo() {
-    if (!arquivoCarregado) return;
-
-    document.getElementById('resultado-resumo').style.display = 'block';
-    document.getElementById('texto-resumo').innerHTML = 
-`<strong>✅ Arquivo recebido:</strong> ${arquivoCarregado.name}
-
-📌 <em>Este é um espaço para seu resumo.</em>
-
-No momento, esta é uma versão de demonstração. Para gerar resumos reais automaticamente, você pode:
-
-1. Copiar o texto do seu PDF/Word e colar no <strong>Gemini</strong> ou <strong>ChatGPT</strong> pedindo um resumo de estudo organizado por tópicos.
-
-2. Ou, mais pra frente, conectamos este app diretamente com a <strong>API do Gemini</strong> — é gratuita para uso básico! 💡
-
-💡 Dica: Sempre salve seus materiais no <strong>Google Drive</strong> e use uma IA gratuita para os resumos. Assim você não depende de créditos que acabam! 💚`;
 }
 
-// Copiar resumo
-function copiarResumo() {
-    const texto = document.getElementById('texto-resumo').innerText;
-    navigator.clipboard.writeText(texto).then(() => {
-        alert('✅ Resumo copiado para a área de transferência!');
+async function lerPDF(arquivo) {
+    const leitor = new FileReader();
+    return new Promise((resolve, reject) => {
+        leitor.onload = async function(e) {
+            const arrayBuffer = e.target.result;
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let texto = '';
+            
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const pagina = await pdf.getPage(i);
+                const conteudo = await pagina.getTextContent();
+                texto += conteudo.items.map(item => item.str).join(' ') + '\n';
+            }
+            resolve(texto);
+        };
+        leitor.onerror = reject;
+        leitor.readAsArrayBuffer(arquivo);
     });
+}
+
+async function lerWord(arquivo) {
+    const leitor = new FileReader();
+    return new Promise((resolve, reject) => {
+        leitor.onload = async function(e) {
+            const arrayBuffer = e.target.result;
+            const resultado = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+            resolve(resultado.value);
+        };
+        leitor.onerror = reject;
+        leitor.readAsArrayBuffer(arquivo);
+    });
+}
+
+async function lerTXT(arquivo) {
+    const leitor = new FileReader();
+    return new Promise((resolve, reject) => {
+        leitor.onload = function(e) {
+            resolve(e.target.result);
+        };
+        leitor.onerror = reject;
+        leitor.readAsText(arquivo);
+    });
+}
+
+// Mostrar texto lido
+function gerarResumo() {
+    if (!textoExtraido) {
+        alert('Selecione um arquivo primeiro!');
+        return;
+    }
+    
+    document.getElementById('texto-resumo').textContent = 
+        textoExtraido.substring(0, 3000) + (textoExtraido.length > 3000 ? '...' : '');
+    document.getElementById('resultado-resumo').style.display = 'block';
+    document.getElementById('botoes-acao').style.display = 'flex';
+}
+
+// Copiar texto
+function copiarResumo() {
+    navigator.clipboard.writeText(textoExtraido)
+        .then(() => alert('Texto copiado! ✅'))
+        .catch(() => alert('Não foi possível copiar'));
+}
+
+// 🆕 Gerar resumo com IA
+async function gerarResumoIA() {
+    if (!textoExtraido) {
+        alert('Selecione um arquivo primeiro!');
+        return;
+    }
+    
+    if (GEMINI_API_KEY === 'COLOQUE-SUA-CHAVE-AQUI') {
+        alert('⚠️ Coloque sua chave da API do Gemini no código primeiro!\nVeja as instruções no passo a passo.');
+        return;
+    }
+    
+    const botao = document.getElementById('btn-resumo-ia');
+    botao.disabled = true;
+    botao.innerHTML = '⏳ Gerando resumo...';
+    
+    try {
+        const textoParaResumir = textoExtraido.substring(0, 15000); // Limite de caracteres
+        
+        const resposta = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `Você é um assistente de estudos. Faça um resumo claro, bem organizado por tópicos e fácil de estudar do texto abaixo. Use títulos e marcadores. Texto: ${textoParaResumir}`
+                        }]
+                    }]
+                })
+            }
+        );
+        
+        const dados = await resposta.json();
+        
+        if (dados.candidates && dados.candidates[0].content) {
+            const resumo = dados.candidates[0].content.parts[0].text;
+            document.getElementById('texto-resumo').innerHTML = formatarResumo(resumo);
+            document.getElementById('resultado-resumo').style.display = 'block';
+        } else {
+            alert('Erro ao gerar resumo. Verifique sua chave da API.');
+        }
+    } catch (erro) {
+        alert('Erro: ' + erro.message);
+    }
+    
+    botao.disabled = false;
+    botao.innerHTML = '✨ Gerar Resumo com IA';
+}
+
+// Formatar o resumo para exibir melhor
+function formatarResumo(texto) {
+    return texto
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
 }
