@@ -143,3 +143,45 @@ function gerarResumoIA() {
       '<br><br><em>✨ Versão com IA em breve!</em>';
   }, 800);
 }
+// 🧭 Navegação entre as páginas
+function mostrarPagina(paginaId) {
+  // Esconde TODAS as páginas
+  document.querySelectorAll('main > div').forEach(pagina => {
+    pagina.style.display = 'none';
+  });
+  
+  // Mostra a página escolhida
+  const alvo = document.getElementById(paginaId);
+  if (alvo) alvo.style.display = 'block';
+}
+
+// 🔗 Conecta os botões do menu às páginas
+document.addEventListener('DOMContentLoaded', function() {
+  // Enciclopédia
+  const encCard = document.querySelector('.card-pessego');
+  if (encCard) encCard.onclick = () => mostrarPagina('pagina-enciclopedia');
+  
+  // Autores e teorias
+  const autCard = document.querySelector('.card-amarelo-claro');
+  if (autCard) autCard.onclick = () => mostrarPagina('pagina-autores');
+  
+  // Linha do tempo
+  const tempoCard = document.querySelector('.card-verde-claro');
+  if (tempoCard) tempoCard.onclick = () => mostrarPagina('pagina-linhatempo');
+  
+  // Biblioteca
+  const bibCard = document.querySelector('.card-azul-claro2');
+  if (bibCard) bibCard.onclick = () => mostrarPagina('pagina-biblioteca');
+  
+  // Conteúdos
+  const contCard = document.querySelector('.card-rosa');
+  if (contCard) contCard.onclick = () => mostrarPagina('pagina-conteudos');
+  
+  // Glossário
+  const glossarioCard = document.querySelector('.card-amarelo-claro2');
+  if (glossarioCard) glossarioCard.onclick = () => mostrarPagina('pagina-glossario');
+  
+  // Disciplinas
+  const discCard = document.querySelector('.card-verde-claro2');
+  if (discCard) discCard.onclick = () => mostrarPagina('pagina-disciplinas');
+});
